@@ -7,8 +7,10 @@ const rateLimit = require('express-rate-limit');
 const { connectDB, sequelize } = require('./config/db');
 require('./models/auth'); // load associations
 require('./models/account'); // load account associations
+require('./models/transfer'); // load transfer associations
 const authRoutes = require('./routes/auth/auth.routes');
 const accountRoutes = require('./routes/account/account.routes');
+const transferRoutes = require('./routes/transfer/transfer.routes');
 const errorHandler = require('./middlewares/error.middleware');
 
 const app = express();
@@ -34,6 +36,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes);
 app.use('/api/account', accountRoutes);
+app.use('/api/transfer', transferRoutes);
 
 // ─── ERROR HANDLING ────────────────────────────────────────
 app.use(errorHandler);
