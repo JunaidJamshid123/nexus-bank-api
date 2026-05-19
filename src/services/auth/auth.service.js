@@ -2,6 +2,7 @@ const { Op } = require('sequelize');
 const { User, MpinStore, Session, RefreshToken } = require('../../models/auth');
 const { BankAccount } = require('../../models/account');
 const accountService = require('../account/account.service');
+const profileService = require('../profile/profile.service');
 const ApiError = require('../../utils/ApiError');
 const tokenService = require('./token.service');
 
@@ -23,6 +24,9 @@ const register = async ({ phone, fullName, email, dateOfBirth, gender, password,
 
   const mpinHash = await MpinStore.hashMpin(mpin);
   await MpinStore.create({ userId: user.id, mpinHash });
+
+  // Auto-create the user profile row (mirrors users fields + banking-only fields)
+  await profileService.createProfileForUser(user);
 
   // Auto-create a default savings bank account
   const bankAccount = await accountService.createAccount({

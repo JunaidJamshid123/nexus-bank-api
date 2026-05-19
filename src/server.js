@@ -8,9 +8,12 @@ const { connectDB, sequelize } = require('./config/db');
 require('./models/auth'); // load associations
 require('./models/account'); // load account associations
 require('./models/transfer'); // load transfer associations
+require('./models/profile'); // load profile associations
 const authRoutes = require('./routes/auth/auth.routes');
 const accountRoutes = require('./routes/account/account.routes');
 const transferRoutes = require('./routes/transfer/transfer.routes');
+const profileRoutes = require('./routes/profile/profile.routes');
+const statementRoutes = require('./routes/statement/statement.routes');
 const errorHandler = require('./middlewares/error.middleware');
 
 const app = express();
@@ -19,7 +22,7 @@ const PORT = process.env.PORT || 5000;
 // ─── GLOBAL MIDDLEWARE ─────────────────────────────────────
 app.use(helmet());
 app.use(cors());
-app.use(express.json({ limit: '10kb' }));
+app.use(express.json({ limit: '6mb' }));
 
 // Rate limiting
 const limiter = rateLimit({
@@ -37,6 +40,8 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/account', accountRoutes);
 app.use('/api/transfer', transferRoutes);
+app.use('/api/profile', profileRoutes);
+app.use('/api/statement', statementRoutes);
 
 // ─── ERROR HANDLING ────────────────────────────────────────
 app.use(errorHandler);
